@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DALC4STANDARD", "DALC4STANDARD\DALC4STANDARD.csproj", "{AB844F09-9D76-41B7-8FF6-74C5C30F980D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB844F09-9D76-41B7-8FF6-74C5C30F980D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB844F09-9D76-41B7-8FF6-74C5C30F980D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB844F09-9D76-41B7-8FF6-74C5C30F980D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB844F09-9D76-41B7-8FF6-74C5C30F980D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BC322C1C-ADE3-4DDD-ACB0-0736FB494976}
+	EndGlobalSection
+EndGlobal
