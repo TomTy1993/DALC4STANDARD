@@ -18,14 +18,13 @@ namespace DALC4STANDARD
     /// <summary>
     /// DBHelper class enables to execute Sql Objects for the connection parameters specified into web.config or App.config file.
     /// </summary>
-    public class DBHelper
+    public class DbHelper
     {
         #region Fields
 
         private readonly CommandBuilder _commandBuilder;
         private readonly ConnectionManager _connectionManager;
         private readonly DataAdapterManager _dbAdapterManager;
-        private readonly DbProviderFactory _dbFactory;
 
         #endregion
 
@@ -60,12 +59,11 @@ namespace DALC4STANDARD
         /// </summary>
         /// <param name="dbFactory"></param>
         /// <param name="connectionString">Connection String</param>
-        public DBHelper(DbProviderFactory dbFactory, string connectionString)
+        public DbHelper(DbProviderFactory dbFactory, string connectionString)
         {
-            _dbFactory = dbFactory;
             _connectionManager = new ConnectionManager(dbFactory, connectionString);
-            _commandBuilder = new CommandBuilder(_dbFactory);
-            _dbAdapterManager = new DataAdapterManager(_dbFactory);
+            _commandBuilder = new CommandBuilder(dbFactory);
+            _dbAdapterManager = new DataAdapterManager(dbFactory);
         }
 
         #endregion
@@ -158,8 +156,7 @@ namespace DALC4STANDARD
         /// <returns>DataReader</returns>
         public IDataReader ExecuteDataReader(string commandText, IDbConnection connection, DBParameter param, CommandType commandType)
         {
-            DbParameterCollection paramCollection = new DbParameterCollection();
-            paramCollection.Add(param);
+            var paramCollection = new DbParameterCollection { param };
             return ExecuteDataReader(commandText, connection, paramCollection, commandType);
         }
 
@@ -197,9 +194,8 @@ namespace DALC4STANDARD
         /// <returns>DataReader</returns>
         public IDataReader ExecuteDataReader(string commandText, IDbConnection connection, DbParameterCollection paramCollection, CommandType commandType)
         {
-            IDataReader dataReader = null;
-            IDbCommand command = _commandBuilder.GetCommand(commandText, connection, paramCollection, commandType);
-            dataReader = command.ExecuteReader();
+            IDbCommand command = _commandBuilder.GetCommand(commandText, connection, commandType, paramCollection);
+            var dataReader = command.ExecuteReader();
             command.Dispose();
             return dataReader;
         }
@@ -226,8 +222,7 @@ namespace DALC4STANDARD
         /// <returns>IDataReader</returns>
         public IDataReader ExecuteDataReader(string commandText, DBParameter param, IDbTransaction transaction, CommandType commandType)
         {
-            DbParameterCollection paramCollection = new DbParameterCollection();
-            paramCollection.Add(param);
+            var paramCollection = new DbParameterCollection { param };
             return ExecuteDataReader(commandText, paramCollection, transaction, commandType);
         }
 
@@ -253,17 +248,16 @@ namespace DALC4STANDARD
         /// <returns>IDataReader</returns>
         public IDataReader ExecuteDataReader(string commandText, DbParameterCollection paramCollection, IDbTransaction transaction, CommandType commandType)
         {
-            IDataReader dataReader = null;
-            IDbConnection connection = transaction.Connection;
-            IDbCommand command = _commandBuilder.GetCommand(commandText, connection, paramCollection, commandType);
+            var connection = transaction.Connection;
+            var command = _commandBuilder.GetCommand(commandText, connection, commandType, paramCollection);
             command.Transaction = transaction;
-            dataReader = command.ExecuteReader();
+            var dataReader = command.ExecuteReader();
             command.Dispose();
             return dataReader;
         }
 
         /// <summary>
-        /// Executes the Sql Command or Stored Procedure and return resultset in the form of DataSet.
+        /// Executes the Sql Command or Stored Procedure and return result set in the form of DataSet.
         /// </summary>
         /// <param name="commandText">Sql Command or Stored Procedure name</param>
         /// <param name="param">Parameter to be associated with the command</param>
@@ -271,8 +265,7 @@ namespace DALC4STANDARD
         /// <returns>Result in the form of DataSet</returns>
         public DataSet ExecuteDataSet(string commandText, DBParameter param, CommandType commandType)
         {
-            DbParameterCollection paramCollection = new DbParameterCollection();
-            paramCollection.Add(param);
+            var paramCollection = new DbParameterCollection { param };
             return ExecuteDataSet(commandText, paramCollection, commandType);
         }
 
@@ -292,7 +285,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command or Stored Procedure and return resultset in the form of DataSet.
+        /// Executes the Sql Command or Stored Procedure and return result set in the form of DataSet.
         /// </summary>
         /// <param name="commandText">Sql Command or Stored Procedure name</param>
         /// <param name="commandType">Type of command (i.e. Sql Command/ Stored Procedure name/ Table Direct)</param>
@@ -313,20 +306,19 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command and return resultset in the form of DataSet.
+        /// Executes the Sql Command and return result set in the form of DataSet.
         /// </summary>
         /// <param name="commandText">Sql Command </param>
         /// <param name="param">Parameter to be associated with the command</param>
         /// <returns>Result in the form of DataSet</returns>
         public DataSet ExecuteDataSet(string commandText, DBParameter param)
         {
-            DbParameterCollection paramCollection = new DbParameterCollection();
-            paramCollection.Add(param);
+            var paramCollection = new DbParameterCollection { param };
             return ExecuteDataSet(commandText, paramCollection);
         }
 
         /// <summary>
-        /// Executes the Sql Command and return resultset in the form of DataSet.
+        /// Executes the Sql Command and return result set in the form of DataSet.
         /// </summary>
         /// <param name="commandText">Sql Command </param>
         /// <param name="paramCollection">Parameter collection to be associated with the command</param>
@@ -337,7 +329,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command or Stored Procedure and return resultset in the form of DataTable.
+        /// Executes the Sql Command or Stored Procedure and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command or Stored Procedure name</param>
         /// <param name="tableName">Table name</param>
@@ -353,7 +345,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command or Stored Procedure and return resultset in the form of DataTable.
+        /// Executes the Sql Command or Stored Procedure and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command8 or Stored Procedure name</param>
         /// <param name="paramCollection">Parameter collection to be associated with the Command or Stored Procedure.</param>
@@ -365,7 +357,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command and return resultset in the form of DataTable.
+        /// Executes the Sql Command and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command</param>
         /// <param name="tableName">Table name</param>
@@ -377,7 +369,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command and return resultset in the form of DataTable.
+        /// Executes the Sql Command and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command</param>
         /// <param name="paramCollection">Parameter collection to be associated with the Command.</param>
@@ -397,13 +389,12 @@ namespace DALC4STANDARD
         /// <returns>Result in the form of DataTable</returns>
         public DataTable ExecuteDataTable(string commandText, string tableName, DBParameter param, CommandType commandType)
         {
-            DbParameterCollection paramCollection = new DbParameterCollection();
-            paramCollection.Add(param);
+            var paramCollection = new DbParameterCollection { param };
             return ExecuteDataTable(commandText, tableName, paramCollection, commandType);
         }
 
         /// <summary>
-        /// Executes the Sql Command or Stored Procedure and return resultset in the form of DataTable.
+        /// Executes the Sql Command or Stored Procedure and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command or Stored Procedure Name</param>
         /// <param name="param">Parameter to be associated with the Command.</param>
@@ -415,7 +406,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command and return resultset in the form of DataTable.
+        /// Executes the Sql Command and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command</param>
         /// <param name="tableName">Table name</param>
@@ -427,7 +418,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command and return resultset in the form of DataTable.
+        /// Executes the Sql Command and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command</param>
         /// <param name="param">Parameter to be associated with the Command.</param>
@@ -438,7 +429,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command or Stored Procedure and return resultset in the form of DataTable.
+        /// Executes the Sql Command or Stored Procedure and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command or Stored Procedure Name</param>
         /// <param name="tableName">Table name</param>
@@ -450,7 +441,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command or Stored Procedure and return resultset in the form of DataTable.
+        /// Executes the Sql Command or Stored Procedure and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command or Stored Procedure Name</param>
         /// <param name="commandType">Type of command (i.e. Sql Command/ Stored Procedure name/ Table Direct)</param>
@@ -461,7 +452,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command and return resultset in the form of DataTable.
+        /// Executes the Sql Command and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command</param>
         /// <param name="tableName">Table name</param>
@@ -472,7 +463,7 @@ namespace DALC4STANDARD
         }
 
         /// <summary>
-        /// Executes the Sql Command and return resultset in the form of DataTable.
+        /// Executes the Sql Command and return result set in the form of DataTable.
         /// </summary>
         /// <param name="commandText">Sql Command</param>
         /// <returns>Result in the form of DataTable</returns>
@@ -513,7 +504,7 @@ namespace DALC4STANDARD
         /// <returns>Number of rows affected.</returns>
         public int ExecuteNonQuery(string commandText, DBParameter param, CommandType commandType)
         {
-            return ExecuteNonQuery(commandText, param, (IDbTransaction)null, commandType);
+            return ExecuteNonQuery(commandText, param, null, commandType);
         }
 
         /// <summary>
@@ -526,8 +517,7 @@ namespace DALC4STANDARD
         /// <returns>Number of rows affected.</returns>
         public int ExecuteNonQuery(string commandText, DBParameter param, IDbTransaction transaction, CommandType commandType)
         {
-            DbParameterCollection paramCollection = new DbParameterCollection();
-            paramCollection.Add(param);
+            var paramCollection = new DbParameterCollection { param };
             return ExecuteNonQuery(commandText, paramCollection, transaction, commandType);
         }
 
@@ -540,31 +530,27 @@ namespace DALC4STANDARD
         /// <returns>Number of rows effected.</returns>
         public int ExecuteNonQuery(string commandText, DbParameterCollection paramCollection, CommandType commandType)
         {
-            return ExecuteNonQuery(commandText, paramCollection, (IDbTransaction)null, commandType);
+            return ExecuteNonQuery(commandText, paramCollection, null, commandType);
         }
 
         /// <summary>
         /// Executes Sql Command or Stored procedure and returns number of rows affected.
         /// </summary>
         /// <param name="commandText">Sql Command or Stored Procedure Name</param>
-        /// <param name="paramCollection">Parameter Collection to be associated with the comman</param>
+        /// <param name="paramCollection">Parameter Collection to be associated with the command</param>
         /// <param name="transaction">Current Database Transaction (Use Helper.Transaction to get transaction)</param>
         /// <param name="commandType">Type of command (i.e. Sql Command/ Stored Procedure name/ Table Direct)</param>
         /// <returns>Number of rows affected.</returns>
         public int ExecuteNonQuery(string commandText, DbParameterCollection paramCollection, IDbTransaction transaction, CommandType commandType)
         {
-            int rowsAffected = 0;
-            IDbConnection connection = transaction != null ? transaction.Connection : _connectionManager.CreateConnectionObject();
-            IDbCommand command = _commandBuilder.GetCommand(commandText, connection, paramCollection, commandType);
+            int rowsAffected;
+            var connection = transaction != null ? transaction.Connection : _connectionManager.CreateConnectionObject();
+            var command = _commandBuilder.GetCommand(commandText, connection, commandType, paramCollection);
             command.Transaction = transaction;
 
             try
             {
                 rowsAffected = command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
             finally
             {
@@ -576,8 +562,7 @@ namespace DALC4STANDARD
                         connection.Dispose();
                     }
                 }
-                if (command != null)
-                    command.Dispose();
+                command.Dispose();
             }
             return rowsAffected;
         }
@@ -611,7 +596,7 @@ namespace DALC4STANDARD
         /// <returns>Number of rows effected.</returns>
         public int ExecuteNonQuery(string commandText, DBParameter param)
         {
-            return ExecuteNonQuery(commandText, param, (IDbTransaction)null);
+            return ExecuteNonQuery(commandText, param, null);
         }
 
         /// <summary>
@@ -634,7 +619,7 @@ namespace DALC4STANDARD
         /// <returns>Number of rows effected.</returns>
         public int ExecuteNonQuery(string commandText, DbParameterCollection paramCollection)
         {
-            return ExecuteNonQuery(commandText, paramCollection, (IDbTransaction)null);
+            return ExecuteNonQuery(commandText, paramCollection, null);
         }
 
         /// <summary>
@@ -694,8 +679,7 @@ namespace DALC4STANDARD
         /// <returns>A single value. (First row's first cell value, if more than one row and column is returned.)</returns>
         public object ExecuteScalar(string commandText, DBParameter param, IDbTransaction transaction, CommandType commandType)
         {
-            DbParameterCollection paramCollection = new DbParameterCollection();
-            paramCollection.Add(param);
+            var paramCollection = new DbParameterCollection { param };
             return ExecuteScalar(commandText, paramCollection, transaction, commandType);
         }
 
@@ -708,7 +692,7 @@ namespace DALC4STANDARD
         /// <returns>A single value. (First row's first cell value, if more than one row and column is returned.)</returns>
         public object ExecuteScalar(string commandText, DbParameterCollection paramCollection, CommandType commandType)
         {
-            return ExecuteScalar(commandText, paramCollection, (IDbTransaction)null, commandType);
+            return ExecuteScalar(commandText, paramCollection, null, commandType);
         }
 
         /// <summary>
@@ -721,17 +705,13 @@ namespace DALC4STANDARD
         /// <returns>A single value. (First row's first cell value, if more than one row and column is returned.)</returns>
         public object ExecuteScalar(string commandText, DbParameterCollection paramCollection, IDbTransaction transaction, CommandType commandType)
         {
-            object objScalar = null;
-            IDbConnection connection = transaction != null ? transaction.Connection : _connectionManager.CreateConnectionObject();
-            IDbCommand command = _commandBuilder.GetCommand(commandText, connection, paramCollection, commandType);
+            object objScalar;
+            var connection = transaction != null ? transaction.Connection : _connectionManager.CreateConnectionObject();
+            var command = _commandBuilder.GetCommand(commandText, connection, commandType, paramCollection);
             command.Transaction = transaction;
             try
             {
                 objScalar = command.ExecuteScalar();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
             finally
             {
@@ -743,9 +723,7 @@ namespace DALC4STANDARD
                         connection.Dispose();
                     }
                 }
-
-                if (command != null)
-                    command.Dispose();
+                command.Dispose();
             }
             return objScalar;
         }
@@ -779,7 +757,7 @@ namespace DALC4STANDARD
         /// <returns>A single value. (First row's first cell value, if more than one row and column is returned.)</returns>
         public object ExecuteScalar(string commandText, DBParameter param)
         {
-            return ExecuteScalar(commandText, param, (IDbTransaction)null);
+            return ExecuteScalar(commandText, param, null);
         }
 
         /// <summary>
@@ -810,7 +788,7 @@ namespace DALC4STANDARD
         /// </summary>
         /// <param name="commandText">Sql Command</param>
         /// <param name="paramCollection">Database  Parameter Collection</param>
-        /// <param name="transaction">Database Transacion (Use DBHelper.Transaction property.)</param>
+        /// <param name="transaction">Database Transaction (Use DBHelper.Transaction property.)</param>
         /// <returns></returns>
         public object ExecuteScalar(string commandText, DbParameterCollection paramCollection, IDbTransaction transaction)
         {
@@ -867,7 +845,7 @@ namespace DALC4STANDARD
         public IDbCommand GetCommand(string commandText, DBParameter parameter, CommandType commandType)
         {
             var connection = CreateConnectionObject();
-            var command = _commandBuilder.GetCommand(commandText, connection, parameter, commandType);
+            var command = _commandBuilder.GetCommand(commandText, connection, commandType, parameter);
             return command;
         }
 
@@ -886,8 +864,7 @@ namespace DALC4STANDARD
 
         public IDbCommand GetCommand(string commandText, DBParameter parameter, IDbTransaction transaction)
         {
-            var paramCollection = new DbParameterCollection();
-            paramCollection.Add(parameter);
+            var paramCollection = new DbParameterCollection { parameter };
             return GetCommand(commandText, paramCollection, transaction, CommandType.Text);
         }
 
@@ -903,7 +880,7 @@ namespace DALC4STANDARD
         public IDbCommand GetCommand(string commandText, DbParameterCollection parameterCollection, CommandType commandType)
         {
             var connection = CreateConnectionObject();
-            var command = _commandBuilder.GetCommand(commandText, connection, parameterCollection, commandType);
+            var command = _commandBuilder.GetCommand(commandText, connection, commandType, parameterCollection);
             return command;
         }
 
@@ -919,7 +896,7 @@ namespace DALC4STANDARD
         public IDbCommand GetCommand(string commandText, DbParameterCollection parameterCollection, IDbTransaction transaction, CommandType commandType)
         {
             var connection = transaction != null ? transaction.Connection : CreateConnectionObject();
-            var command = _commandBuilder.GetCommand(commandText, connection, parameterCollection, commandType);
+            var command = _commandBuilder.GetCommand(commandText, connection, commandType, parameterCollection);
             return command;
         }
 

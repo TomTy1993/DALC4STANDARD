@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 /*****************************************************************************
  * DALC4STANDARD IS AN OPEN SOURCE DATA ACCESS LAYER
@@ -13,7 +14,7 @@
 
 namespace DALC4STANDARD
 {
-    public class DbParameterCollection
+    public class DbParameterCollection : IEnumerable<DBParameter>
     {
         #region Properties
 
@@ -42,6 +43,16 @@ namespace DALC4STANDARD
         public void Add(DBParameter parameter)
         {
             Parameters.Add(parameter);
+        }
+
+        public IEnumerator<DBParameter> GetEnumerator()
+        {
+            return Parameters.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         /// <summary>

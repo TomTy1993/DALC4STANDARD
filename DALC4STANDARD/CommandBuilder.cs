@@ -19,7 +19,7 @@ namespace DALC4STANDARD
         #region Fields
 
         private readonly DbProviderFactory _dbFactory;
-        private readonly DBParamBuilder _paramBuilder;
+        private readonly DbParamBuilder _paramBuilder;
 
         #endregion
 
@@ -28,17 +28,12 @@ namespace DALC4STANDARD
         public CommandBuilder(DbProviderFactory dbFactory)
         {
             _dbFactory = dbFactory;
-            _paramBuilder = new DBParamBuilder(_dbFactory);
+            _paramBuilder = new DbParamBuilder(_dbFactory);
         }
 
         #endregion
 
         #region Methods
-
-        public IDbCommand GetCommand(string commandText, IDbConnection connection)
-        {
-            return GetCommand(commandText, connection, CommandType.Text);
-        }
 
         public IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType)
         {
@@ -49,12 +44,7 @@ namespace DALC4STANDARD
             return command;
         }
 
-        public IDbCommand GetCommand(string commandText, IDbConnection connection, DBParameter parameter)
-        {
-            return GetCommand(commandText, connection, parameter, CommandType.Text);
-        }
-
-        public IDbCommand GetCommand(string commandText, IDbConnection connection, DBParameter parameter, CommandType commandType)
+        public IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType, DBParameter parameter)
         {
             IDataParameter param = _paramBuilder.GetParameter(parameter);
             var command = GetCommand(commandText, connection, commandType);
@@ -62,12 +52,7 @@ namespace DALC4STANDARD
             return command;
         }
 
-        public IDbCommand GetCommand(string commandText, IDbConnection connection, DbParameterCollection parameterCollection)
-        {
-            return GetCommand(commandText, connection, parameterCollection, CommandType.Text);
-        }
-
-        public IDbCommand GetCommand(string commandText, IDbConnection connection, DbParameterCollection parameterCollection, CommandType commandType)
+        public IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType, DbParameterCollection parameterCollection)
         {
             var paramArray = _paramBuilder.GetParameterCollection(parameterCollection);
             var command = GetCommand(commandText, connection, commandType);

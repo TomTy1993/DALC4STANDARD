@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 
 /*****************************************************************************
  * DALC4STANDARD IS AN OPEN SOURCE DATA ACCESS LAYER
@@ -26,12 +25,12 @@ namespace DALC4STANDARD
         /// <summary>
         /// Gets or sets the direction of the parameter.
         /// </summary>
-        public ParameterDirection ParamDirection { get; set; }
+        public ParameterDirection? ParamDirection { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the parameter.
         /// </summary>
-        public DbType Type { get; set; }
+        public DbType? Type { get; set; }
 
         /// <summary>
         /// Gets or sets the value associated with the parameter.
@@ -46,7 +45,7 @@ namespace DALC4STANDARD
         /// <summary>
         /// Default constructor. Parameter name, vale, type and direction needs to be assigned explicitly by using the public properties exposed.
         /// </summary>
-        public DBParameter() : this(String.Empty, null, DbType.String, ParameterDirection.Input)
+        public DBParameter() : this(null, null, null, null)
         {
         }
 
@@ -56,7 +55,7 @@ namespace DALC4STANDARD
         /// </summary>
         /// <param name="name">Parameter name</param>
         /// <param name="value">Value associated with the parameter</param>
-        public DBParameter(string name, object value) : this(name, value, DbType.String, ParameterDirection.Input)
+        public DBParameter(string name, object value) : this(name, value, null, null)
         {
         }
 
@@ -67,7 +66,7 @@ namespace DALC4STANDARD
         /// <param name="name">Parameter name</param>
         /// <param name="value">Value associated with the parameter</param>
         /// <param name="paramDirection">Parameter direction</param>
-        public DBParameter(string name, object value, ParameterDirection paramDirection) : this(name, value, DbType.String, paramDirection)
+        public DBParameter(string name, object value, ParameterDirection paramDirection) : this(name, value, null, paramDirection)
         {
         }
 
@@ -78,7 +77,7 @@ namespace DALC4STANDARD
         /// <param name="name">Parameter name</param>
         /// <param name="value">Value associated with the parameter</param>
         /// <param name="dbType">Data type</param>
-        public DBParameter(string name, object value, DbType dbType) : this(name, value, dbType, ParameterDirection.Input)
+        public DBParameter(string name, object value, DbType dbType) : this(name, value, dbType, null)
         {
         }
 
@@ -89,7 +88,7 @@ namespace DALC4STANDARD
         /// <param name="value">Value associated with the parameter</param>
         /// <param name="dbType">Data type</param>
         /// <param name="paramDirection">Parameter direction</param>
-        public DBParameter(string name, object value, DbType dbType, ParameterDirection paramDirection)
+        public DBParameter(string name, object value, DbType? dbType, ParameterDirection? paramDirection)
         {
             Name = name;
             Value = value;

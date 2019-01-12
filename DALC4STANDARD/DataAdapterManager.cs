@@ -57,7 +57,7 @@ namespace DALC4STANDARD
         {
             if (paramCollection != null && paramCollection.Parameters.Count > 0)
             {
-                return _commandBuilder.GetCommand(sqlCommand, connection, paramCollection, commandType);
+                return _commandBuilder.GetCommand(sqlCommand, connection, commandType, paramCollection);
             }
             return _commandBuilder.GetCommand(sqlCommand, connection, commandType);
         }

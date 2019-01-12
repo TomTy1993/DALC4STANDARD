@@ -14,7 +14,7 @@ using System.Data.Common;
 
 namespace DALC4STANDARD
 {
-    internal class DBParamBuilder
+    internal class DbParamBuilder
     {
         #region Fields
 
@@ -24,7 +24,7 @@ namespace DALC4STANDARD
 
         #region Constructors
 
-        public DBParamBuilder(DbProviderFactory dbFactory)
+        public DbParamBuilder(DbProviderFactory dbFactory)
         {
             _dbFactory = dbFactory;
         }
@@ -36,30 +36,41 @@ namespace DALC4STANDARD
         public DbParameter GetParameter(DBParameter parameter)
         {
             var dbParam = GetParameter();
-            dbParam.ParameterName = parameter.Name;
-            dbParam.Value = parameter.Value;
-            dbParam.Direction = parameter.ParamDirection;
-            dbParam.DbType = parameter.Type;
+            if (parameter.Name != null)
+            {
+                dbParam.ParameterName = parameter.Name;
+            }
+            if (parameter.Value != null)
+            {
+                dbParam.Value = parameter.Value;
+            }
+            if (parameter.ParamDirection != null)
+            {
+                dbParam.Direction = parameter.ParamDirection.Value;
+            }
+            if (parameter.Type != null)
+            {
+                dbParam.DbType = parameter.Type.Value;
+            }
 
-            return dbParam;
-        }
-
-        public DbParameter GetParameter()
-        {
-            var dbParam = _dbFactory.CreateParameter();
             return dbParam;
         }
 
         public List<DbParameter> GetParameterCollection(DbParameterCollection parameterCollection)
         {
             var dbParamCollection = new List<DbParameter>();
-            foreach (var param in parameterCollection.Parameters)
+            foreach (var param in parameterCollection)
             {
-                var dbParam = GetParameter(param);
-                dbParamCollection.Add(dbParam);
+                dbParamCollection.Add(GetParameter(param));
             }
 
             return dbParamCollection;
+        }
+
+        private DbParameter GetParameter()
+        {
+            var dbParam = _dbFactory.CreateParameter();
+            return dbParam;
         }
 
         #endregion
