@@ -5,64 +5,62 @@ using System.Data.Common;
  * DALC4STANDARD IS AN OPEN SOURCE DATA ACCESS LAYER
  * THIS DOES NOT REQUIRE ANY KIND OF LICENSING
  * USERS ARE FREE TO MODIFY THE SOURCE CODE AS PER REQUIREMENT
- * ANY SUGGESTIONS ARE MOST WELCOME (SEND THE SAME TO tom.ty1993@gmail.com WITH DALC4STANDARD AS SUBJECT LINE 
+ * ANY SUGGESTIONS ARE MOST WELCOME (SEND THE SAME TO tom.ty1993@gmail.com WITH DALC4STANDARD AS SUBJECT LINE
  * ----------------AUTHOR DETAILS--------------
  * NAME     : Tom Taborovski
  * LOCATION : Tel-Aviv (Israel)
  * EMAIL    : tom.ty1993@gmail.com
  ******************************************************************************/
+
 namespace DALC4STANDARD
 {
     internal class DBParamBuilder
     {
+        #region Fields
 
-        private string _providerName = string.Empty;
-        private AssemblyProvider _assemblyProvider = null;
+        private readonly DbProviderFactory _dbFactory;
 
-        internal DBParamBuilder(string providerName)
+        #endregion
+
+        #region Constructors
+
+        public DBParamBuilder(DbProviderFactory dbFactory)
         {
-            _assemblyProvider = new AssemblyProvider(providerName);
-            _providerName = providerName;
+            _dbFactory = dbFactory;
         }
 
-        internal DbParameter GetParameter(DBParameter parameter)
+        #endregion
+
+        #region Methods
+
+        public DbParameter GetParameter(DBParameter parameter)
         {
-            DbParameter dbParam = GetParameter();         
-            dbParam.ParameterName = parameter.Name;         
+            var dbParam = GetParameter();
+            dbParam.ParameterName = parameter.Name;
             dbParam.Value = parameter.Value;
-            dbParam.Direction = parameter.ParamDirection;            
+            dbParam.Direction = parameter.ParamDirection;
             dbParam.DbType = parameter.Type;
 
-            return dbParam;            
+            return dbParam;
         }
 
-        internal List<DbParameter> GetParameterCollection(DbParameterCollection parameterCollection)
+        public DbParameter GetParameter()
         {
-            List<DbParameter> dbParamCollection = new List<DbParameter>();
-            DbParameter dbParam = null;
-            foreach(DBParameter param in parameterCollection.Parameters)
+            var dbParam = _dbFactory.CreateParameter();
+            return dbParam;
+        }
+
+        public List<DbParameter> GetParameterCollection(DbParameterCollection parameterCollection)
+        {
+            var dbParamCollection = new List<DbParameter>();
+            foreach (var param in parameterCollection.Parameters)
             {
-                dbParam = GetParameter(param);
+                var dbParam = GetParameter(param);
                 dbParamCollection.Add(dbParam);
             }
-            
+
             return dbParamCollection;
         }
-
-        #region Private Methods
-        private DbParameter GetParameter()
-        {
-            //string typeName = AssemblyProvider.GetInstance().GetParameterType();
-            //IDbDataParameter dbParam = (IDbDataParameter)AssemblyProvider.GetInstance().DBProviderAssembly.CreateInstance(typeName);
-            //return dbParam;
-
-            //DbParameter dbParam = AssemblyProvider.GetInstance(this._providerName).Factory.CreateParameter();
-            DbParameter dbParam = _assemblyProvider.Factory.CreateParameter();
-            return dbParam;
-
-        }
-
-  
 
         #endregion
     }

@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 
 /*****************************************************************************
  * DALC4STANDARD IS AN OPEN SOURCE DATA ACCESS LAYER
  * THIS DOES NOT REQUIRE ANY KIND OF LICENSING
  * USERS ARE FREE TO MODIFY THE SOURCE CODE AS PER REQUIREMENT
- * ANY SUGGESTIONS ARE MOST WELCOME (SEND THE SAME TO tom.ty1993@gmail.com WITH DALC4STANDARD AS SUBJECT LINE 
+ * ANY SUGGESTIONS ARE MOST WELCOME (SEND THE SAME TO tom.ty1993@gmail.com WITH DALC4STANDARD AS SUBJECT LINE
  * ----------------AUTHOR DETAILS--------------
  * NAME     : Tom Taborovski
  * LOCATION : Tel-Aviv (Israel)
  * EMAIL    : tom.ty1993@gmail.com
  ******************************************************************************/
+
 namespace DALC4STANDARD
 {
     /// <summary>
@@ -18,75 +20,53 @@ namespace DALC4STANDARD
     /// </summary>
     internal class ConnectionManager
     {
+        #region Fields
 
-        private string _connectionName = string.Empty;
-        private string _connectionString = string.Empty;
-        private string _providerName = string.Empty;
-        private AssemblyProvider _assemblyProvider = null;
+        private readonly DbProviderFactory _dbFactory;
 
-        internal ConnectionManager()
+        #endregion
+
+        #region Properties
+
+        public string ConnectionString { get; }
+
+        #endregion
+
+        #region Constructors
+
+        internal ConnectionManager(DbProviderFactory dbFactory, string connectionString)
         {
-            _connectionName = Configuration.DefaultConnection;
-            _connectionString = Configuration.ConnectionString;
-            _providerName = Configuration.ProviderName;
-            _assemblyProvider = new AssemblyProvider(_providerName);
+            _dbFactory = dbFactory;
+            ConnectionString = connectionString;
         }
 
+        #endregion
 
-        internal ConnectionManager(string connectionName)
-        {
-            _connectionName = connectionName;
-            _connectionString = Configuration.GetConnectionString(connectionName);
-            _providerName = Configuration.GetProviderName(connectionName);
-            _assemblyProvider = new AssemblyProvider(_providerName);
-        }
-
-        internal ConnectionManager(string connectionString, string providerName)
-        {
-            _connectionString = connectionString;
-            _providerName = providerName;
-            _connectionName = string.Empty;
-            _assemblyProvider = new AssemblyProvider(_providerName);
-        }
-
-        internal string ConnectionString
-        {
-            get
-            {
-                return _connectionString;
-            }
-        }
-
-        internal string ProviderName
-        {
-            get
-            {
-                return _providerName;
-            }
-        }
-
+        #region Methods
 
         /// <summary>
         /// Establish Connection to the database and Return an open connection.
         /// </summary>
         /// <returns>Open connection to the database</returns>
-        internal IDbConnection GetConnection()
-        {   
-            IDbConnection connection = _assemblyProvider.Factory.CreateConnection();
-            connection.ConnectionString = _connectionString;
-
-            try
+        public IDbConnection CreateConnectionObject()
+        {
+            var connection = _dbFactory.CreateConnection();
+            if (connection != null)
             {
-                connection.Open();
+                try
+                {
+                    connection.ConnectionString = ConnectionString;
+                    connection.Open();
+                }
+                catch (Exception)
+                {
+                    connection.Dispose();
+                    throw;
+                }
             }
-            catch (Exception err)
-            {
-                throw err;
-            }
-
             return connection;
-        }      
+        }
 
-       
+        #endregion
     }
 }

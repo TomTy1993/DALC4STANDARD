@@ -4,16 +4,37 @@
  * DALC4STANDARD IS AN OPEN SOURCE DATA ACCESS LAYER
  * THIS DOES NOT REQUIRE ANY KIND OF LICENSING
  * USERS ARE FREE TO MODIFY THE SOURCE CODE AS PER REQUIREMENT
- * ANY SUGGESTIONS ARE MOST WELCOME (SEND THE SAME TO tom.ty1993@gmail.com WITH DALC4STANDARD AS SUBJECT LINE 
+ * ANY SUGGESTIONS ARE MOST WELCOME (SEND THE SAME TO tom.ty1993@gmail.com WITH DALC4STANDARD AS SUBJECT LINE
  * ----------------AUTHOR DETAILS--------------
  * NAME     : Tom Taborovski
  * LOCATION : Tel-Aviv (Israel)
  * EMAIL    : tom.ty1993@gmail.com
  ******************************************************************************/
+
 namespace DALC4STANDARD
 {
     public class DbParameterCollection
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets list of parameters
+        /// </summary>
+        public List<DBParameter> Parameters { get; }
+
+        #endregion
+
+        #region Constructors
+
+        public DbParameterCollection()
+        {
+            Parameters = new List<DBParameter>();
+        }
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Adds a DBParameter to the ParameterCollection
         /// </summary>
@@ -31,13 +52,13 @@ namespace DALC4STANDARD
         {
             Parameters.Remove(parameter);
         }
-        
+
         /// <summary>
         /// Removes all the parameters from the Parameter Collection
         /// </summary>
         public void RemoveAll()
         {
-            Parameters.RemoveRange(0, Parameters.Count - 1);
+            Parameters.Clear();
         }
 
         /// <summary>
@@ -49,9 +70,6 @@ namespace DALC4STANDARD
             Parameters.RemoveAt(index);
         }
 
-        /// <summary>
-        /// Gets list of parameters
-        /// </summary>
-        public List<DBParameter> Parameters { get; } = new List<DBParameter>();
+        #endregion
     }
 }
