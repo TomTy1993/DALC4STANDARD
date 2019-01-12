@@ -54,6 +54,10 @@ namespace DALC4STANDARD
 
         #region Constructors
 
+        public DbHelper(DbProviderFactory dbFactory) : this(dbFactory, Configuration.ConnectionString)
+        {
+        }
+
         /// <summary>
         /// Constructor creates instance of the class for the specified connection string and provider name
         /// </summary>
@@ -804,7 +808,7 @@ namespace DALC4STANDARD
         /// <returns>Command ready for execute</returns>
         public IDbCommand GetCommand(string commandText, CommandType commandType)
         {
-            IDbConnection connection = _connectionManager.CreateConnectionObject();
+            var connection = _connectionManager.CreateConnectionObject();
             var command = _commandBuilder.GetCommand(commandText, connection, commandType);
             return command;
         }

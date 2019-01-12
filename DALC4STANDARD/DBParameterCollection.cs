@@ -16,12 +16,15 @@ namespace DALC4STANDARD
 {
     public class DbParameterCollection : IEnumerable<DBParameter>
     {
+        #region Fields
+
+        private readonly List<DBParameter> _parameters;
+
+        #endregion
+
         #region Properties
 
-        /// <summary>
-        /// Gets list of parameters
-        /// </summary>
-        public List<DBParameter> Parameters { get; }
+        public int Count => _parameters.Count;
 
         #endregion
 
@@ -29,7 +32,7 @@ namespace DALC4STANDARD
 
         public DbParameterCollection()
         {
-            Parameters = new List<DBParameter>();
+            _parameters = new List<DBParameter>();
         }
 
         #endregion
@@ -42,12 +45,12 @@ namespace DALC4STANDARD
         /// <param name="parameter">Parameter to be added</param>
         public void Add(DBParameter parameter)
         {
-            Parameters.Add(parameter);
+            _parameters.Add(parameter);
         }
 
         public IEnumerator<DBParameter> GetEnumerator()
         {
-            return Parameters.GetEnumerator();
+            return _parameters.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -61,7 +64,7 @@ namespace DALC4STANDARD
         /// <param name="parameter">Parameter to be removed</param>
         public void Remove(DBParameter parameter)
         {
-            Parameters.Remove(parameter);
+            _parameters.Remove(parameter);
         }
 
         /// <summary>
@@ -69,7 +72,7 @@ namespace DALC4STANDARD
         /// </summary>
         public void RemoveAll()
         {
-            Parameters.Clear();
+            _parameters.Clear();
         }
 
         /// <summary>
@@ -78,7 +81,7 @@ namespace DALC4STANDARD
         /// <param name="index">Index from which parameter is supposed to be removed</param>
         public void RemoveAt(int index)
         {
-            Parameters.RemoveAt(index);
+            _parameters.RemoveAt(index);
         }
 
         #endregion

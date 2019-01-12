@@ -55,7 +55,7 @@ namespace DALC4STANDARD
 
         private IDbCommand GetCommand(string sqlCommand, DbParameterCollection paramCollection, IDbConnection connection, CommandType commandType)
         {
-            if (paramCollection != null && paramCollection.Parameters.Count > 0)
+            if (paramCollection != null && paramCollection.Count > 0)
             {
                 return _commandBuilder.GetCommand(sqlCommand, connection, commandType, paramCollection);
             }
