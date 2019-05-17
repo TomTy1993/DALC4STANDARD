@@ -1,5 +1,5 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using DALC4STANDARD.Interfaces;
+using System.Data;
 
 /*****************************************************************************
  * DALC4STANDARD IS AN OPEN SOURCE DATA ACCESS LAYER
@@ -14,18 +14,18 @@ using System.Data.Common;
 
 namespace DALC4STANDARD
 {
-    internal class CommandBuilder
+    internal class CommandBuilder : ICommandBuilder
     {
         #region Fields
 
-        private readonly DbProviderFactory _dbFactory;
+        private readonly IDbProviderFactory _dbFactory;
         private readonly DbParamBuilder _paramBuilder;
 
         #endregion
 
         #region Constructors
 
-        public CommandBuilder(DbProviderFactory dbFactory)
+        public CommandBuilder(IDbProviderFactory dbFactory)
         {
             _dbFactory = dbFactory;
             _paramBuilder = new DbParamBuilder(_dbFactory);

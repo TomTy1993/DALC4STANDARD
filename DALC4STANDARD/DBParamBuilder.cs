@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DALC4STANDARD.Interfaces;
+using System.Collections.Generic;
 using System.Data.Common;
 
 /*****************************************************************************
@@ -18,13 +19,13 @@ namespace DALC4STANDARD
     {
         #region Fields
 
-        private readonly DbProviderFactory _dbFactory;
+        private readonly IDbProviderFactory _dbFactory;
 
         #endregion
 
         #region Constructors
 
-        public DbParamBuilder(DbProviderFactory dbFactory)
+        public DbParamBuilder(IDbProviderFactory dbFactory)
         {
             _dbFactory = dbFactory;
         }

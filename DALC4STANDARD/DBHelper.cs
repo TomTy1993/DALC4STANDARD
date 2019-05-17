@@ -1,3 +1,4 @@
+using DALC4STANDARD.Interfaces;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -22,9 +23,9 @@ namespace DALC4STANDARD
     {
         #region Fields
 
-        private readonly CommandBuilder _commandBuilder;
-        private readonly ConnectionManager _connectionManager;
-        private readonly DataAdapterManager _dbAdapterManager;
+        private readonly ICommandBuilder _commandBuilder;
+        private readonly IConnectionManager _connectionManager;
+        private readonly IDataAdapterManager _dbAdapterManager;
 
         #endregion
 
@@ -65,9 +66,10 @@ namespace DALC4STANDARD
         /// <param name="connectionString">Connection String</param>
         public DbHelper(DbProviderFactory dbFactory, string connectionString)
         {
-            _connectionManager = new ConnectionManager(dbFactory, connectionString);
-            _commandBuilder = new CommandBuilder(dbFactory);
-            _dbAdapterManager = new DataAdapterManager(dbFactory);
+            var dbFactoryWrapper = new DbProviderFactoryWrapper(dbFactory);
+            _connectionManager = new ConnectionManager(dbFactoryWrapper, connectionString);
+            _commandBuilder = new CommandBuilder(dbFactoryWrapper);
+            _dbAdapterManager = new DataAdapterManager(dbFactoryWrapper);
         }
 
         #endregion

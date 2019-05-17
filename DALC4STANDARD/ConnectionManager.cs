@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DALC4STANDARD.Interfaces;
+using System;
 using System.Data;
-using System.Data.Common;
 
 /*****************************************************************************
  * DALC4STANDARD IS AN OPEN SOURCE DATA ACCESS LAYER
@@ -15,14 +15,11 @@ using System.Data.Common;
 
 namespace DALC4STANDARD
 {
-    /// <summary>
-    /// ConnectionManager takes care of establishing the connection to the database parameters specified into web.config or app.config file.
-    /// </summary>
-    internal class ConnectionManager
+    internal class ConnectionManager : IConnectionManager
     {
         #region Fields
 
-        private readonly DbProviderFactory _dbFactory;
+        private readonly IDbProviderFactory _dbFactory;
 
         #endregion
 
@@ -34,7 +31,7 @@ namespace DALC4STANDARD
 
         #region Constructors
 
-        internal ConnectionManager(DbProviderFactory dbFactory, string connectionString)
+        internal ConnectionManager(IDbProviderFactory dbFactory, string connectionString)
         {
             _dbFactory = dbFactory;
             ConnectionString = connectionString;
@@ -44,10 +41,6 @@ namespace DALC4STANDARD
 
         #region Methods
 
-        /// <summary>
-        /// Establish Connection to the database and Return an open connection.
-        /// </summary>
-        /// <returns>Open connection to the database</returns>
         public IDbConnection CreateConnectionObject()
         {
             var connection = _dbFactory.CreateConnection();

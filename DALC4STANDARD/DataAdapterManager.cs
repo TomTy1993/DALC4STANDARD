@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using DALC4STANDARD.Interfaces;
+using System.Data;
 using System.Data.Common;
 
 /*****************************************************************************
@@ -14,18 +15,18 @@ using System.Data.Common;
 
 namespace DALC4STANDARD
 {
-    internal class DataAdapterManager
+    internal class DataAdapterManager : IDataAdapterManager
     {
         #region Fields
 
-        private readonly CommandBuilder _commandBuilder;
-        private readonly DbProviderFactory _dbFactory;
+        private readonly ICommandBuilder _commandBuilder;
+        private readonly IDbProviderFactory _dbFactory;
 
         #endregion
 
         #region Constructors
 
-        public DataAdapterManager(DbProviderFactory dbFactory)
+        public DataAdapterManager(IDbProviderFactory dbFactory)
         {
             _dbFactory = dbFactory;
             _commandBuilder = new CommandBuilder(_dbFactory);
