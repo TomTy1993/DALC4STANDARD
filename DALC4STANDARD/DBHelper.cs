@@ -19,7 +19,7 @@ namespace DALC4STANDARD
     /// <summary>
     /// DBHelper class enables to execute Sql Objects for the connection parameters specified into web.config or App.config file.
     /// </summary>
-    public class DbHelper
+    public class DbHelper : IDbHelper
     {
         #region Fields
 
