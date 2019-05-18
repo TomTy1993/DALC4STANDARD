@@ -6,10 +6,6 @@ namespace DALC4STANDARD.Interfaces
     {
         #region Methods
 
-        IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType);
-
-        IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType, DBParameter parameter);
-
         IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType, DbParameterCollection parameterCollection);
 
         #endregion

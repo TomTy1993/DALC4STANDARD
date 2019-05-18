@@ -60,7 +60,7 @@ namespace DALC4STANDARD
             {
                 return _commandBuilder.GetCommand(sqlCommand, connection, commandType, paramCollection);
             }
-            return _commandBuilder.GetCommand(sqlCommand, connection, commandType);
+            return _commandBuilder.GetCommand(sqlCommand, connection, commandType, null);
         }
 
         private DbDataAdapter GetDataAdapter(IDbCommand command)

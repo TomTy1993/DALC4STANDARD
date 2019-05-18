@@ -35,30 +35,20 @@ namespace DALC4STANDARD
 
         #region Methods
 
-        public IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType)
+        public IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType, DbParameterCollection parameterCollection)
         {
             var command = GetCommand();
             command.CommandText = commandText;
             command.Connection = connection;
             command.CommandType = commandType;
-            return command;
-        }
 
-        public IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType, DBParameter parameter)
-        {
-            IDataParameter param = _paramBuilder.GetParameter(parameter);
-            var command = GetCommand(commandText, connection, commandType);
-            command.Parameters.Add(param);
-            return command;
-        }
+            if (parameterCollection != null)
+            {
+                var paramArray = _paramBuilder.GetParameterCollection(parameterCollection);
 
-        public IDbCommand GetCommand(string commandText, IDbConnection connection, CommandType commandType, DbParameterCollection parameterCollection)
-        {
-            var paramArray = _paramBuilder.GetParameterCollection(parameterCollection);
-            var command = GetCommand(commandText, connection, commandType);
-
-            foreach (var param in paramArray)
-                command.Parameters.Add(param);
+                foreach (var param in paramArray)
+                    command.Parameters.Add(param);
+            }
 
             return command;
         }
